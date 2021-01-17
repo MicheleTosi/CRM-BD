@@ -995,14 +995,14 @@ BEGIN
     
     select count(*) 
     from Appuntamento
-    where SalaRiunione_sede_citta=var_citta and `data`>=NOW()
+    where SalaRiunione_sede_citta=var_citta and `data`>CURDATE() or (`data`=CURDATE() and ora_inizio>CURTIME())
     into var_count;
     if var_count=0 then
 		signal sqlstate '45002' set message_text="There are no busy meeting rooms in the selected city";
     end if;
 	select SalaRiunione_numero as numero_sala, SalaRiunione_sede_civico as civico_sede, SalaRiunione_sede_via as via_sede, SalaRiunione_sede_citta as citta_sede, DATE_FORMAT(`data`, '%d/%m/%Y') as `data`, DATE_FORMAT(ora_inizio, '%H:%i') as ora_inizio, DATE_FORMAT(ora_fine, '%H:%i') as ora_fine
     from Appuntamento
-    where SalaRiunione_sede_citta=var_citta and (`data`>CURDATE() or (`data`=CURDATE() and ora_inizio>CURTIME())
+    where SalaRiunione_sede_citta=var_citta and (`data`>CURDATE() or (`data`=CURDATE() and ora_inizio>CURTIME()))
 	order by DATE_FORMAT(`data`, '%Y/%m/%d'),`ora_inizio`, `SalaRiunione_numero`;
 END$$
 
